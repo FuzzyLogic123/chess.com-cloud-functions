@@ -14,12 +14,12 @@ const scrapeBestWin = async url => {
     const el = html.split('"player":"')[1];
     const rating = html.split(',"leaderboardRank":')[0].split(':');
     const dom = new jsdom.JSDOM(html).window.document;
-    functions.logger.log(dom.querySelector('.profile-card-name').innerHTML);
+    functions.logger.log(dom.querySelector('.profile-card-name')?.innerHTML);
     // return html
     return {
         bestWin: el.split('"')[0],
         rating: rating[rating.length - 1],
-        name: dom.querySelector('.profile-card-name').innerHTML,
+        name: dom.querySelector('.profile-card-name')?.innerHTML,
         profilePicture: dom.querySelector('.post-view-meta-avatar img').src
     };
 }
@@ -51,7 +51,7 @@ const scrapeWinsBrowser = async url => {
             bestWin: bestWin.innerHTML,
             profilePicture: profilePicture.src,
             rating: rating,
-            name: name.innerHTML
+            name: name?.innerHTML
         }
     });
     
