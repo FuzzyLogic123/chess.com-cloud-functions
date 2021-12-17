@@ -5,14 +5,22 @@ const cors = require("cors")({ origin: true });
 
 const fetch = require("node-fetch");
 
+const jsdom = require("jsdom");
+
 const scrapeBestWin = async url => {
 
     const res = await fetch(url);
     const html = await res.text();
     const el = html.split('"player":"')[1];
-
+    const rating = html.split(',"leaderboardRank":')[0].split(':');
+    const dom = new jsdom.JSDOM(html).window.document;
+    functions.logger.log(dom.querySelector('.profile-card-name').innerHTML);
+    // return html
     return {
-        bestWin: el.split('"')[0]
+        bestWin: el.split('"')[0],
+        rating: rating[rating.length - 1],
+        name: dom.querySelector('.profile-card-name').innerHTML,
+        profilePicture: dom.querySelector('.post-view-meta-avatar img').src
     };
 }
 
@@ -36,15 +44,21 @@ const scrapeWinsBrowser = async url => {
     //excecutes in the dom
     const data = await page.evaluate(() => {
         const bestWin = document.querySelector('#vue-instance > div.game-parent > div > section:nth-child(7) > div:nth-child(1) > div.icon-block-large-subheader > a');
-        return bestWin.innerHTML;
+        const profilePicture = document.querySelector('.profile-header-avatar img');
+        const rating = document.querySelector('.rating-block-container').innerHTML.split('\n')[1].replace(/\s/g, '');
+        const name = document.querySelector('.profile-card-name');
+        return {
+            bestWin: bestWin.innerHTML,
+            profilePicture: profilePicture.src,
+            rating: rating,
+            name: name.innerHTML
+        }
     });
     
     functions.logger.log(data);
     await browser.close();
 
-    return {
-        bestWin: data
-    };
+    return data;
 }
 
 exports.scraper = functions.https.onRequest((request, response) => {
