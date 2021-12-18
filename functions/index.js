@@ -14,13 +14,15 @@ const scrapeBestWin = async url => {
     const el = html.split('"player":"')[1];
     const rating = html.split(',"leaderboardRank":')[0].split(':');
     const dom = new jsdom.JSDOM(html).window.document;
+    const profilePictureURL = new URL(dom.querySelector('.post-view-meta-avatar img').src, 'https://www.chess.com/')
     functions.logger.log(dom.querySelector('.profile-card-name')?.innerHTML);
     // return html
     return {
         bestWin: el.split('"')[0],
         rating: rating[rating.length - 1],
         name: dom.querySelector('.profile-card-name')?.innerHTML,
-        profilePicture: dom.querySelector('.post-view-meta-avatar img').src
+        profilePicture: profilePictureURL.href,
+        title: dom.querySelector('.profile-card-chesstitle')?.innerHTML.trim()
     };
 }
 
@@ -44,14 +46,16 @@ const scrapeWinsBrowser = async url => {
     //excecutes in the dom
     const data = await page.evaluate(() => {
         const bestWin = document.querySelector('#vue-instance > div.game-parent > div > section:nth-child(7) > div:nth-child(1) > div.icon-block-large-subheader > a');
-        const profilePicture = document.querySelector('.profile-header-avatar img');
         const rating = document.querySelector('.rating-block-container').innerHTML.split('\n')[1].replace(/\s/g, '');
         const name = document.querySelector('.profile-card-name');
+        const title = document.querySelector('.profile-card-chesstitle');
+        const profilePictureURL = new URL(document.querySelector('.post-view-meta-avatar img').src, 'https://www.chess.com/')
         return {
             bestWin: bestWin.innerHTML,
-            profilePicture: profilePicture.src,
+            profilePicture: profilePictureURL.href,
             rating: rating,
-            name: name?.innerHTML
+            name: name?.innerHTML,
+            title: title?.innerHTML.trim()
         }
     });
     
