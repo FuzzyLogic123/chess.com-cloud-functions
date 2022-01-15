@@ -14,14 +14,14 @@ const scrapeBestWin = async url => {
     const el = html.split('"player":"')[1];
     const rating = html.split(',"leaderboardRank":')[0].split(':');
     const dom = new jsdom.JSDOM(html).window.document;
-    const profilePictureURL = new URL(dom.querySelector('.post-view-meta-avatar img').src, 'https://www.chess.com/')
+    const profilePictureURL = new URL(dom.querySelector('.post-view-meta-avatar img')?.src, 'https://www.chess.com/')
     functions.logger.log(dom.querySelector('.profile-card-name')?.innerHTML);
     // return html
     return {
-        bestWin: el.split('"')[0],
+        next_player: el.split('"')[0],
         rating: rating[rating.length - 1],
         name: dom.querySelector('.profile-card-name')?.innerHTML,
-        profilePicture: profilePictureURL.href,
+        avatar: profilePictureURL.href,
         title: dom.querySelector('.profile-card-chesstitle')?.innerHTML.trim()
     };
 }
@@ -51,8 +51,8 @@ const scrapeWinsBrowser = async url => {
         const title = document.querySelector('.profile-card-chesstitle');
         const profilePictureURL = new URL(document.querySelector('.post-view-meta-avatar img').src, 'https://www.chess.com/')
         return {
-            bestWin: bestWin.innerHTML,
-            profilePicture: profilePictureURL.href,
+            next_player: bestWin.innerHTML,
+            avatar: profilePictureURL.href,
             rating: rating,
             name: name?.innerHTML,
             title: title?.innerHTML.trim()
