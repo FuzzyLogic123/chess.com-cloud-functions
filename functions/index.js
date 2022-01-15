@@ -22,7 +22,8 @@ const scrapeBestWin = async url => {
         rating: rating[rating.length - 1],
         name: dom.querySelector('.profile-card-name')?.innerHTML,
         avatar: profilePictureURL.href,
-        title: dom.querySelector('.profile-card-chesstitle')?.innerHTML.trim()
+        title: dom.querySelector('.profile-card-chesstitle')?.innerHTML.trim(),
+        username: dom.querySelector('.profile-card-username a').innerHTML
     };
 }
 
