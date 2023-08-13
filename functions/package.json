@@ -6,6 +6,7 @@
   },
   "type": "module",
   "scripts": {
-    "start": "npx functions-framework --target=scraper"
+    "scraper": "npx functions-framework --target=scraper",
+    "autocomplete": "npx functions-framework --target=autocomplete"
   }
 }
