@@ -3,8 +3,8 @@ import cors from 'cors';
 import { scrapeBestWin } from './scrapeBestWin.js';
 import { getUsernameAutoComplete } from './getUsernameAutoComplete.js';
 
-const corsMiddleware = cors({ origin: true });
-// const corsMiddleware = cors({ origin: "https://sixdegreesofhikaru.com" });
+// const corsMiddleware = cors({ origin: true });
+const corsMiddleware = cors({ origin: "https://sixdegreesofhikaru.com" });
 
 functions.http('scraper', (request, response) => {
     corsMiddleware(request, response, async () => {
